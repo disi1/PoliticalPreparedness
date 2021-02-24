@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.example.android.politicalpreparedness.MainActivity"
-        android:padding="@dimen/extra_large_padding">
+        android:padding="@dimen/large_padding">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -23,10 +23,8 @@
             android:id="@+id/upcoming_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
             android:text="@string/upcoming_elections"
-            android:textColor="@color/white"
-            android:layout_marginBottom="@dimen/large_padding"
+            android:layout_marginBottom="@dimen/small_padding"
             app:layout_constraintBottom_toTopOf="@id/representatives_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -35,9 +33,7 @@
             android:id="@+id/representatives_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
             android:text="@string/find_my_representatives"
-            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

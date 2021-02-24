@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="representative"
+            type="com.example.android.politicalpreparedness.representative.model.Representative" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/large_padding">
+
+        <ImageView
+            android:id="@+id/representative_photo"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:contentDescription="@string/profile_picture"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_profile" />
+
+        <TextView
+            android:id="@+id/representative_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_padding"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{representative.office.name}"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/representative_photo"
+            app:layout_constraintTop_toTopOf="@id/representative_photo"
+            tools:text="Vice President of the United States" />
+
+        <ImageView
+            android:id="@+id/twitter_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_twitter"
+            app:layout_constraintBottom_toBottomOf="@id/representative_photo"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/facebook_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="@dimen/default_padding"
+            android:src="@drawable/ic_facebook"
+            app:layout_constraintBottom_toBottomOf="@id/twitter_icon"
+            app:layout_constraintEnd_toStartOf="@id/twitter_icon" />
+
+        <ImageView
+            android:id="@+id/www_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="@dimen/default_padding"
+            android:src="@drawable/ic_www"
+            app:layout_constraintBottom_toBottomOf="@id/facebook_icon"
+            app:layout_constraintEnd_toStartOf="@id/facebook_icon" />
+
+        <TextView
+            android:id="@+id/representative_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_padding"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/party_name"
+            app:layout_constraintEnd_toEndOf="@id/party_name"
+            app:layout_constraintStart_toStartOf="@id/representative_title"
+            app:layout_constraintTop_toBottomOf="@+id/representative_title"
+            tools:text="Kamala Devi Harris" />
+
+        <TextView
+            android:id="@+id/party_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default_padding"
+            app:layout_constraintBottom_toBottomOf="@+id/representative_photo"
+            app:layout_constraintEnd_toStartOf="@id/www_icon"
+            app:layout_constraintStart_toStartOf="@id/representative_title"
+            app:layout_constraintTop_toBottomOf="@id/representative_name"
+            tools:text="Democratic Party" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

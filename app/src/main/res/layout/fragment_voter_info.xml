@@ -17,16 +17,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.example.android.politicalpreparedness.MainActivity">
+        tools:context="com.example.android.politicalpreparedness.MainActivity"
+        android:padding="@dimen/large_padding">
 
         <!-- TODO: Add visual styling -->
         <TextView
             android:id="@+id/election_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/extra_large_padding"
-            android:layout_marginTop="@dimen/large_padding"
-            android:layout_marginEnd="@dimen/extra_large_padding"
             android:textSize="24sp"
             android:textStyle="bold"
             app:electionDateText="@{election}"
@@ -41,7 +39,6 @@
             fieldVisibility="@{voterInfoViewModel.hasElectionInformation}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/extra_large_padding"
             android:layout_marginTop="@dimen/default_padding"
             android:text="@string/election_information"
             android:textSize="16sp"
@@ -79,7 +76,6 @@
             fieldVisibility="@{voterInfoViewModel.hasCorrespondenceInformation}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/extra_large_padding"
             android:layout_marginTop="@dimen/default_padding"
             android:text="@string/correspondence_address"
             android:textSize="16sp"
@@ -101,11 +97,8 @@
             tools:text="Florida Division Of Elections, R.a. Gray Building, Room 316, 500 South Bronough Street" />
 
         <com.google.android.material.button.MaterialButton
-            style="style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="24dp"
-            android:background="@color/colorPrimary"
             android:onClick="@{() -> voterInfoViewModel.toggleFollowElection()}"
             android:text="@{voterInfoViewModel.buttonText}"
             android:textColor="@color/white"
