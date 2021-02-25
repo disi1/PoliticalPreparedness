@@ -13,15 +13,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/large_padding">
+        android:layout_marginBottom="@dimen/large_padding">
 
         <ImageView
             android:id="@+id/representative_photo"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:contentDescription="@string/profile_picture"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:profileImage="@{representative.official.photoUrl}"
             tools:src="@drawable/ic_profile" />
 
         <TextView
@@ -41,29 +42,32 @@
 
         <ImageView
             android:id="@+id/twitter_icon"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@drawable/ic_twitter"
             app:layout_constraintBottom_toBottomOf="@id/representative_photo"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/twitter" />
 
         <ImageView
             android:id="@+id/facebook_icon"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginEnd="@dimen/default_padding"
             android:src="@drawable/ic_facebook"
             app:layout_constraintBottom_toBottomOf="@id/twitter_icon"
-            app:layout_constraintEnd_toStartOf="@id/twitter_icon" />
+            app:layout_constraintEnd_toStartOf="@id/twitter_icon"
+            android:contentDescription="@string/facebook" />
 
         <ImageView
             android:id="@+id/www_icon"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginEnd="@dimen/default_padding"
             android:src="@drawable/ic_www"
             app:layout_constraintBottom_toBottomOf="@id/facebook_icon"
-            app:layout_constraintEnd_toStartOf="@id/facebook_icon" />
+            app:layout_constraintEnd_toStartOf="@id/facebook_icon"
+            android:contentDescription="@string/web" />
 
         <TextView
             android:id="@+id/representative_name"
@@ -71,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_padding"
             android:textSize="16sp"
+            android:text="@{representative.official.name}"
             app:layout_constraintBottom_toTopOf="@+id/party_name"
             app:layout_constraintEnd_toEndOf="@id/party_name"
             app:layout_constraintStart_toStartOf="@id/representative_title"
@@ -82,6 +87,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/default_padding"
+            android:text="@{representative.official.party}"
             app:layout_constraintBottom_toBottomOf="@+id/representative_photo"
             app:layout_constraintEnd_toStartOf="@id/www_icon"
             app:layout_constraintStart_toStartOf="@id/representative_title"

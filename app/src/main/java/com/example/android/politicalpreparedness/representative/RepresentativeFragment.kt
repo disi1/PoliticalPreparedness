@@ -4,34 +4,83 @@ import android.content.Context
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.Adapter
+import android.widget.AdapterView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import com.example.android.politicalpreparedness.R
+import com.example.android.politicalpreparedness.database.ElectionDatabase
 import com.example.android.politicalpreparedness.databinding.FragmentRepresentativeBinding
+import com.example.android.politicalpreparedness.election.VoterInfoViewModel
+import com.example.android.politicalpreparedness.election.VoterInfoViewModelFactory
 import com.example.android.politicalpreparedness.network.models.Address
+import com.example.android.politicalpreparedness.repository.Repository
 import com.example.android.politicalpreparedness.representative.adapter.RepresentativeListAdapter
 import java.util.Locale
 
 class DetailFragment : Fragment() {
 
+    private lateinit var binding: FragmentRepresentativeBinding
+
     companion object {
         //TODO: Add Constant for Location request
     }
 
-    private val representativeViewModel by viewModels<RepresentativeViewModel>()
+    private lateinit var representativeViewModel: RepresentativeViewModel
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val binding = FragmentRepresentativeBinding.inflate(inflater, container, false)
+        val database = ElectionDatabase.getInstance(requireContext())
+        val repository = Repository(database)
+
+        val representativeViewModelFactory = RepresentativeViewModelFactory(repository)
+        representativeViewModel = ViewModelProvider(this, representativeViewModelFactory).get(RepresentativeViewModel::class.java)
+
+        binding = FragmentRepresentativeBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this
         binding.viewModel = representativeViewModel
 
-        binding.representativesRecycler.adapter = RepresentativeListAdapter()
+        val representativeListAdapter = RepresentativeListAdapter()
+        binding.representativesRecycler.adapter = representativeListAdapter
 
-        //TODO: Establish button listeners for field and location search
+        representativeViewModel.representatives.observe(viewLifecycleOwner, { representativesList ->
+            representativesList?.let {
+                representativeListAdapter.submitList(representativesList)
+            }
+        })
+
+        binding.state.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                representativeViewModel.address.value?.state = binding.state.selectedItem as String
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                representativeViewModel.address.value?.state = binding.state.selectedItem as String
+            }
+
+        }
+
+        representativeViewModel.errorOnFetchingNetworkData.observe(viewLifecycleOwner, {
+            if(it) {
+                Toast.makeText(
+                        activity,
+                        R.string.network_error,
+                        Toast.LENGTH_LONG
+                ).show()
+                representativeViewModel.displayNetworkErrorComplete()
+            }
+        })
+
+        binding.buttonSearch.setOnClickListener {
+            findMyRepresentatives()
+        }
 
         return binding.root
     }
@@ -39,6 +88,12 @@ class DetailFragment : Fragment() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         //TODO: Handle location permission result to get location on permission granted
+    }
+
+    private fun findMyRepresentatives() {
+        hideKeyboard()
+
+        representativeViewModel.onFindMyRepresentativesClicked()
     }
 
     private fun checkLocationPermissions(): Boolean {
@@ -75,5 +130,4 @@ class DetailFragment : Fragment() {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
-
 }

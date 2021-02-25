@@ -32,7 +32,6 @@ class VoterInfoViewModel(private val repository: Repository, private val followS
         get() = _ballotInfoUrl
 
     val hasElectionInformation = Transformations.map(repository.state) { state ->
-//        state.electionAdministrationBody.ballotInfoUrl != null || state.electionAdministrationBody.votingLocationFinderUrl != null
         state.electionAdministrationBody.electionInfoUrl != null
     }
 
@@ -116,11 +115,4 @@ class VoterInfoViewModel(private val repository: Repository, private val followS
             toggleButtonText()
         }
     }
-
-
-    //TODO: Add live data to hold voter info
-
-    //TODO: Add var and methods to populate voter info
-
-    //TODO: Add var and methods to support loading URLs
 }
