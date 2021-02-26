@@ -31,13 +31,16 @@ class RepresentativeViewModel(private val repository: Repository): ViewModel() {
         }
     }
 
-    //TODO: Create function get address from geo location
-
     fun displayNetworkErrorComplete() {
         _errorOnFetchingNetworkData.value = false
     }
 
     fun onFindMyRepresentativesClicked() {
         _address.value?.let { getRepresentatives(it.toFormattedString()) }
+    }
+
+    fun onUseMyLocationClicked(address: Address) {
+        _address.value = address
+        getRepresentatives(address.toFormattedString())
     }
 }

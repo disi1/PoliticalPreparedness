@@ -26,7 +26,6 @@
             android:text="@string/representative_search"
             android:textSize="24sp"
             android:textStyle="bold"
-            fieldVisibility="@{viewModel.myRepresentativesTitleVisible}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
