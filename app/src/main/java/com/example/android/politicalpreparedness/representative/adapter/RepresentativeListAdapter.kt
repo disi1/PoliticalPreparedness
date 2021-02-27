@@ -61,17 +61,23 @@ class RepresentativeViewHolder(val binding: RepresentativeItemBinding) : Recycle
         val facebookUrl = channels?.let { getFacebookUrl(it) }
         if (!facebookUrl.isNullOrBlank()) {
             enableLink(binding.facebookIcon, facebookUrl)
+        } else {
+            binding.facebookIcon.alpha = 0.4F
         }
 
         val twitterUrl = channels?.let { getTwitterUrl(it) }
         if (!twitterUrl.isNullOrBlank()) {
             enableLink(binding.twitterIcon, twitterUrl)
+        } else {
+            binding.facebookIcon.alpha = 0.4F
         }
     }
 
     private fun showWWWLinks(urls: List<String>?) {
         if (urls != null) {
             enableLink(binding.wwwIcon, urls.first())
+        } else {
+            binding.facebookIcon.alpha = 0.4F
         }
     }
 
