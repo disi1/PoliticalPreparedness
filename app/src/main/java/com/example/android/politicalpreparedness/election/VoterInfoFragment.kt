@@ -25,7 +25,7 @@ class VoterInfoFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
 
         val election = args.argElection
 
@@ -41,13 +41,21 @@ class VoterInfoFragment : Fragment() {
         binding.election = election
 
         voterInfoViewModel.errorOnFetchingNetworkData.observe(viewLifecycleOwner, {
-            if(it) {
+            if (it) {
                 Toast.makeText(
                         activity,
                         R.string.network_error,
                         Toast.LENGTH_LONG
                 ).show()
                 voterInfoViewModel.displayNetworkErrorComplete()
+            }
+        })
+
+        voterInfoViewModel.voterInfoFetched.observe(viewLifecycleOwner, {
+            if (it == false) {
+                binding.loadingVoterInfoImage.visibility = View.VISIBLE
+            } else {
+                binding.loadingVoterInfoImage.visibility = View.GONE
             }
         })
 

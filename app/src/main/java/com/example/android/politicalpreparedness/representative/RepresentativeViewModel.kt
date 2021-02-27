@@ -1,16 +1,19 @@
 package com.example.android.politicalpreparedness.representative
 
+import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.android.politicalpreparedness.network.models.Address
 import com.example.android.politicalpreparedness.repository.Repository
+import com.example.android.politicalpreparedness.utils.isNetworkAvailable
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-class RepresentativeViewModel(private val repository: Repository): ViewModel() {
+class RepresentativeViewModel(private val repository: Repository, application: Application) : AndroidViewModel(application) {
 
     val representatives = repository.representatives
 
-    private val _address = MutableLiveData<Address>(Address("","","","",""))
+    private val _address = MutableLiveData<Address>(Address("", "", "", "", ""))
     val address: LiveData<Address>
         get() = _address
 
@@ -18,16 +21,35 @@ class RepresentativeViewModel(private val repository: Repository): ViewModel() {
     val errorOnFetchingNetworkData: LiveData<Boolean>
         get() = _errorOnFetchingNetworkData
 
+    private val _networkNotAvailable = MutableLiveData<Boolean>()
+    val networkNotAvailable: LiveData<Boolean>
+        get() = _networkNotAvailable
+
+    private val _representativesFetched = MutableLiveData<Boolean>(true)
+    val representativesFetched: LiveData<Boolean>
+        get() = _representativesFetched
+
+    init {
+        _networkNotAvailable.value = !isNetworkAvailable(getApplication())
+    }
+
     private fun getRepresentatives(address: String) {
-        viewModelScope.launch {
-            try {
-                repository.refreshRepresentatives(address)
-                _errorOnFetchingNetworkData.value = false
-            } catch (networkError: IOException) {
-                if(repository.representatives.value == null) {
-                    _errorOnFetchingNetworkData.value = true
+        if (isNetworkAvailable(getApplication())) {
+            viewModelScope.launch {
+                try {
+                    _representativesFetched.value = false
+                    repository.refreshRepresentatives(address)
+                    _errorOnFetchingNetworkData.value = false
+                    _representativesFetched.value = true
+                } catch (networkError: IOException) {
+                    if (repository.representatives.value == null) {
+                        _errorOnFetchingNetworkData.value = true
+                    }
                 }
             }
+        } else {
+            _networkNotAvailable.value = true
+            _errorOnFetchingNetworkData.value = true
         }
     }
 

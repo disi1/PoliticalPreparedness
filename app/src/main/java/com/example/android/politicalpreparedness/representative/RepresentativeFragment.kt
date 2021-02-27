@@ -54,12 +54,13 @@ class DetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
 
+        val application = requireNotNull(this.activity).application
         val database = ElectionDatabase.getInstance(requireContext())
         val repository = Repository(database)
 
-        val representativeViewModelFactory = RepresentativeViewModelFactory(repository)
+        val representativeViewModelFactory = RepresentativeViewModelFactory(repository, application)
         representativeViewModel = ViewModelProvider(this, representativeViewModelFactory).get(RepresentativeViewModel::class.java)
 
         binding = FragmentRepresentativeBinding.inflate(inflater, container, false)
@@ -73,6 +74,7 @@ class DetailFragment : Fragment() {
         representativeViewModel.representatives.observe(viewLifecycleOwner, { representativesList ->
             representativesList?.let {
                 representativeListAdapter.submitList(representativesList)
+                binding.noDataHintGroup.visibility = View.GONE
             }
         })
 
@@ -94,7 +96,17 @@ class DetailFragment : Fragment() {
                         R.string.network_error,
                         Toast.LENGTH_LONG
                 ).show()
+                binding.loadingRepresentativesImage.visibility = View.GONE
                 representativeViewModel.displayNetworkErrorComplete()
+            }
+        })
+
+        representativeViewModel.representativesFetched.observe(viewLifecycleOwner, {
+            if (it == false) {
+                binding.noDataHintGroup.visibility = View.GONE
+                binding.loadingRepresentativesImage.visibility = View.VISIBLE
+            } else {
+                binding.loadingRepresentativesImage.visibility = View.GONE
             }
         })
 

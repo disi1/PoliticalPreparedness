@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.android.politicalpreparedness.R
 import com.example.android.politicalpreparedness.databinding.ElectionItemBinding
 //import com.example.android.politicalpreparedness.databinding.ViewholderElectionBinding
 import com.example.android.politicalpreparedness.network.models.Election
@@ -20,8 +21,8 @@ class ElectionListAdapter(private val clickListener: ElectionListener) : ListAda
 
     override fun onBindViewHolder(holder: ElectionViewHolder, position: Int) {
         val item = getItem(position)
-        if(position % 2 == 0){
-            holder.itemView.setBackgroundColor(Color.parseColor("#f0f2ef"))
+        if (position % 2 == 0) {
+            holder.itemView.setBackgroundColor(Color.parseColor("#F3FBFA"))
         } else {
             holder.itemView.setBackgroundColor(Color.parseColor("#FFFFFF"))
         }

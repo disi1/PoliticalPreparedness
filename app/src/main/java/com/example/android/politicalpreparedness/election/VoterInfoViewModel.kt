@@ -15,6 +15,10 @@ class VoterInfoViewModel(private val repository: Repository, private val followS
     val buttonText: LiveData<String>
         get() = _buttonText
 
+    private val _voterInfoFetched = MutableLiveData<Boolean>(false)
+    val voterInfoFetched: LiveData<Boolean>
+        get() = _voterInfoFetched
+
     private val _errorOnFetchingNetworkData = MutableLiveData<Boolean>(false)
     val errorOnFetchingNetworkData: LiveData<Boolean>
         get() = _errorOnFetchingNetworkData
@@ -88,17 +92,19 @@ class VoterInfoViewModel(private val repository: Repository, private val followS
 
     private suspend fun getVoterInfo() {
         try {
+            _voterInfoFetched.value = false
             repository.refreshVoterInfo(election.division.state, election.id)
             _errorOnFetchingNetworkData.value = false
+            _voterInfoFetched.value = true
         } catch (networkError: IOException) {
-            if(repository.state.value == null) {
+            if (repository.state.value == null) {
                 _errorOnFetchingNetworkData.value = true
             }
         }
     }
 
     private suspend fun toggleButtonText() {
-        if(repository.isElectionSaved(election)) {
+        if (repository.isElectionSaved(election)) {
             _buttonText.value = unfollowString
         } else {
             _buttonText.value = followString
@@ -107,7 +113,7 @@ class VoterInfoViewModel(private val repository: Repository, private val followS
 
     fun toggleFollowElection() {
         viewModelScope.launch {
-            if(repository.isElectionSaved(election)) {
+            if (repository.isElectionSaved(election)) {
                 repository.unfollowElection(election)
             } else {
                 repository.followElection(election)
