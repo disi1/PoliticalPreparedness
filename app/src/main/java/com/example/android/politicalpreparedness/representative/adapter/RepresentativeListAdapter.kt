@@ -61,26 +61,23 @@ class RepresentativeViewHolder(val binding: RepresentativeItemBinding) : Recycle
         val facebookUrl = channels?.let { getFacebookUrl(it) }
         if (!facebookUrl.isNullOrBlank()) {
             enableLink(binding.facebookIcon, facebookUrl)
-            binding.facebookIcon.alpha = 1F
         } else {
-            binding.facebookIcon.alpha = 0.4F
+            disableLink(binding.facebookIcon)
         }
 
         val twitterUrl = channels?.let { getTwitterUrl(it) }
         if (!twitterUrl.isNullOrBlank()) {
             enableLink(binding.twitterIcon, twitterUrl)
-            binding.twitterIcon.alpha = 1F
         } else {
-            binding.twitterIcon.alpha = 0.4F
+            disableLink(binding.twitterIcon)
         }
     }
 
     private fun showWWWLinks(urls: List<String>?) {
         if (urls != null) {
             enableLink(binding.wwwIcon, urls.first())
-            binding.wwwIcon.alpha = 1F
         } else {
-            binding.wwwIcon.alpha = 0.4F
+            disableLink(binding.wwwIcon)
         }
     }
 
@@ -98,7 +95,13 @@ class RepresentativeViewHolder(val binding: RepresentativeItemBinding) : Recycle
 
     private fun enableLink(view: ImageView, url: String) {
         view.visibility = View.VISIBLE
+        view.alpha = 1F
         view.setOnClickListener { setIntent(url) }
+    }
+
+    private fun disableLink(view: ImageView) {
+        view.alpha = 0.4F
+        view.isEnabled = false
     }
 
     private fun setIntent(url: String) {
