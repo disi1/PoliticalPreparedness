@@ -1,26 +1,68 @@
 package com.example.android.politicalpreparedness.representative
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import android.util.Log
+import androidx.lifecycle.*
+import com.example.android.politicalpreparedness.network.models.Address
+import com.example.android.politicalpreparedness.repository.Repository
+import com.example.android.politicalpreparedness.utils.isNetworkAvailable
+import kotlinx.coroutines.launch
+import java.io.IOException
 
-class RepresentativeViewModel: ViewModel() {
+class RepresentativeViewModel(private val repository: Repository, application: Application) : AndroidViewModel(application) {
 
-    //TODO: Establish live data for representatives and address
+    val representatives = repository.representatives
 
-    //TODO: Create function to fetch representatives from API from a provided address
+    private val _address = MutableLiveData<Address>(Address("", "", "", "", ""))
+    val address: LiveData<Address>
+        get() = _address
 
-    /**
-     *  The following code will prove helpful in constructing a representative from the API. This code combines the two nodes of the RepresentativeResponse into a single official :
+    private val _errorOnFetchingNetworkData = MutableLiveData<Boolean>(false)
+    val errorOnFetchingNetworkData: LiveData<Boolean>
+        get() = _errorOnFetchingNetworkData
 
-    val (offices, officials) = getRepresentativesDeferred.await()
-    _representatives.value = offices.flatMap { office -> office.getRepresentatives(officials) }
+    private val _networkNotAvailable = MutableLiveData<Boolean>()
+    val networkNotAvailable: LiveData<Boolean>
+        get() = _networkNotAvailable
 
-    Note: getRepresentatives in the above code represents the method used to fetch data from the API
-    Note: _representatives in the above code represents the established mutable live data housing representatives
+    private val _representativesFetched = MutableLiveData<Boolean>(true)
+    val representativesFetched: LiveData<Boolean>
+        get() = _representativesFetched
 
-     */
+    init {
+        _networkNotAvailable.value = !isNetworkAvailable(getApplication())
+    }
 
-    //TODO: Create function get address from geo location
+    private fun getRepresentatives(address: String) {
+        if (isNetworkAvailable(getApplication())) {
+            viewModelScope.launch {
+                try {
+                    _representativesFetched.value = false
+                    repository.refreshRepresentatives(address)
+                    _errorOnFetchingNetworkData.value = false
+                    _representativesFetched.value = true
+                } catch (networkError: IOException) {
+                    if (repository.representatives.value == null) {
+                        _errorOnFetchingNetworkData.value = true
+                    }
+                }
+            }
+        } else {
+            _networkNotAvailable.value = true
+            _errorOnFetchingNetworkData.value = true
+        }
+    }
 
-    //TODO: Create function to get address from individual fields
+    fun displayNetworkErrorComplete() {
+        _errorOnFetchingNetworkData.value = false
+    }
 
+    fun onFindMyRepresentativesClicked() {
+        _address.value?.let { getRepresentatives(it.toFormattedString()) }
+    }
+
+    fun onUseMyLocationClicked(address: Address) {
+        _address.value = address
+        getRepresentatives(address.toFormattedString())
+    }
 }

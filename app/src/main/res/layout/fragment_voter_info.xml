@@ -17,95 +17,142 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="@dimen/large_padding"
         tools:context="com.example.android.politicalpreparedness.MainActivity">
 
-        <!-- TODO: Add visual styling -->
+        <ImageView
+            android:id="@+id/loading_voter_info_image"
+            android:layout_width="@dimen/loading_indicator_dimens"
+            android:layout_height="@dimen/loading_indicator_dimens"
+            android:contentDescription="@string/loading_data"
+            android:src="@drawable/loading_animation"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/election_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/extra_large_padding"
-            android:layout_marginTop="@dimen/large_padding"
-            android:layout_marginEnd="@dimen/extra_large_padding"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            style="@style/section_title_style"
+            android:textColor="@color/colorAccent"
             app:electionDateText="@{election}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="12 November 2055" />
 
-        <!-- TODO: Add visual styling and content -->
-        <TextView
-            android:id="@+id/state_header"
-            fieldVisibility="@{voterInfoViewModel.hasElectionInformation}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/extra_large_padding"
-            android:layout_marginTop="@dimen/default_padding"
-            android:text="@string/election_information"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:onClick="@{() -> voterInfoViewModel.openElectionInformationUrl()}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/election_date" />
-
-        <!-- TODO: Add visual styling and content -->
-        <TextView
-            android:id="@+id/state_locations"
-            fieldVisibility="@{voterInfoViewModel.hasVotingLocationsInformation}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{() -> voterInfoViewModel.openVotingLocationsUrl()}"
-            android:text="@string/voting_locations"
-            app:layout_constraintStart_toStartOf="@id/election_date"
-            app:layout_constraintTop_toBottomOf="@id/state_header" />
-
-        <!-- TODO: Add visual styling and content -->
-        <TextView
-            android:id="@+id/state_ballot"
-            fieldVisibility="@{voterInfoViewModel.hasBallotInformation}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{() -> voterInfoViewModel.openBallotInfoUrl()}"
-            android:text="@string/ballot_information"
-            app:layout_constraintStart_toStartOf="@id/election_date"
-            app:layout_constraintTop_toBottomOf="@id/state_locations" />
-
-        <!-- TODO: Add visual styling and content -->
-
-        <TextView
-            android:id="@+id/state_correspondence_header"
-            fieldVisibility="@{voterInfoViewModel.hasCorrespondenceInformation}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/extra_large_padding"
-            android:layout_marginTop="@dimen/default_padding"
-            android:text="@string/correspondence_address"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/state_ballot" />
-
-        <!-- TODO: Add data binding -->
-        <TextView
-            android:id="@+id/address"
-            fieldVisibility="@{voterInfoViewModel.hasCorrespondenceInformation}"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/extra_large_padding"
-            android:text="@{voterInfoViewModel.correspondenceAddress}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/state_correspondence_header"
-            app:layout_constraintTop_toBottomOf="@id/state_correspondence_header"
-            tools:text="Florida Division Of Elections, R.a. Gray Building, Room 316, 500 South Bronough Street" />
-
-        <com.google.android.material.button.MaterialButton
-            style="style"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="24dp"
-            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toTopOf="@+id/toggle_follow_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/election_date">
+
+            <ImageView
+                android:id="@+id/imageView"
+                viewVisibility="@{voterInfoViewModel.hasElectionInformation}"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginEnd="@dimen/small_padding"
+                android:onClick="@{() -> voterInfoViewModel.openElectionInformationUrl()}"
+                android:src="@drawable/ic_external_link_icon"
+                app:layout_constraintBottom_toBottomOf="@+id/election_information_header"
+                app:layout_constraintEnd_toStartOf="@+id/election_information_header"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/election_information_header"
+                android:contentDescription="@string/external_link" />
+
+            <TextView
+                android:id="@+id/election_information_header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{() -> voterInfoViewModel.openElectionInformationUrl()}"
+                android:text="@string/election_information"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/voting_locations_button"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="@{voterInfoViewModel.hasVotingLocationsInformation}"
+                android:onClick="@{() -> voterInfoViewModel.openVotingLocationsUrl()}"
+                android:text="@string/voting_locations"
+                android:textColor="@color/colorPrimaryDark"
+                app:icon="@drawable/ic_baseline_location_on_24"
+                app:iconGravity="top"
+                app:iconSize="100dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/election_information_header" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/ballot_information_button"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:enabled="@{voterInfoViewModel.hasBallotInformation}"
+                android:onClick="@{() -> voterInfoViewModel.openBallotInfoUrl()}"
+                android:text="@string/ballot_information"
+                android:textColor="@color/colorPrimaryDark"
+                app:icon="@drawable/ic_launcher_foreground"
+                app:iconGravity="top"
+                app:iconSize="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/voting_locations_button" />
+
+            <ImageView
+                android:id="@+id/voting_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="100dp"
+                android:src="@drawable/ic_baseline_mail_outline_24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ballot_information_button"
+                android:contentDescription="@string/correspondence_address" />
+
+            <TextView
+                android:id="@+id/state_correspondence_header"
+                style="@style/item_title_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/correspondence_address"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/voting_image" />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@{voterInfoViewModel.correspondenceAddress}"
+                customText="@{voterInfoViewModel.hasCorrespondenceInformation}"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/state_correspondence_header"
+                tools:text="Florida Division Of Elections, R.a. Gray Building, Room 316, 500 South Bronough Street" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/toggle_follow_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:onClick="@{() -> voterInfoViewModel.toggleFollowElection()}"
             android:text="@{voterInfoViewModel.buttonText}"
             android:textColor="@color/white"

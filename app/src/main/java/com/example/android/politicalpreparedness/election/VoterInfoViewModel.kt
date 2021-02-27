@@ -15,6 +15,10 @@ class VoterInfoViewModel(private val repository: Repository, private val followS
     val buttonText: LiveData<String>
         get() = _buttonText
 
+    private val _voterInfoFetched = MutableLiveData<Boolean>(false)
+    val voterInfoFetched: LiveData<Boolean>
+        get() = _voterInfoFetched
+
     private val _errorOnFetchingNetworkData = MutableLiveData<Boolean>(false)
     val errorOnFetchingNetworkData: LiveData<Boolean>
         get() = _errorOnFetchingNetworkData
@@ -32,7 +36,6 @@ class VoterInfoViewModel(private val repository: Repository, private val followS
         get() = _ballotInfoUrl
 
     val hasElectionInformation = Transformations.map(repository.state) { state ->
-//        state.electionAdministrationBody.ballotInfoUrl != null || state.electionAdministrationBody.votingLocationFinderUrl != null
         state.electionAdministrationBody.electionInfoUrl != null
     }
 
@@ -89,17 +92,19 @@ class VoterInfoViewModel(private val repository: Repository, private val followS
 
     private suspend fun getVoterInfo() {
         try {
+            _voterInfoFetched.value = false
             repository.refreshVoterInfo(election.division.state, election.id)
             _errorOnFetchingNetworkData.value = false
+            _voterInfoFetched.value = true
         } catch (networkError: IOException) {
-            if(repository.state.value == null) {
+            if (repository.state.value == null) {
                 _errorOnFetchingNetworkData.value = true
             }
         }
     }
 
     private suspend fun toggleButtonText() {
-        if(repository.isElectionSaved(election)) {
+        if (repository.isElectionSaved(election)) {
             _buttonText.value = unfollowString
         } else {
             _buttonText.value = followString
@@ -108,7 +113,7 @@ class VoterInfoViewModel(private val repository: Repository, private val followS
 
     fun toggleFollowElection() {
         viewModelScope.launch {
-            if(repository.isElectionSaved(election)) {
+            if (repository.isElectionSaved(election)) {
                 repository.unfollowElection(election)
             } else {
                 repository.followElection(election)
@@ -116,11 +121,4 @@ class VoterInfoViewModel(private val repository: Repository, private val followS
             toggleButtonText()
         }
     }
-
-
-    //TODO: Add live data to hold voter info
-
-    //TODO: Add var and methods to populate voter info
-
-    //TODO: Add var and methods to support loading URLs
 }
