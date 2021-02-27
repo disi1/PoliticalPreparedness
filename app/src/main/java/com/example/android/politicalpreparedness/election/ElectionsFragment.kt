@@ -1,6 +1,7 @@
 package com.example.android.politicalpreparedness.election
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +16,7 @@ import com.example.android.politicalpreparedness.election.adapter.ElectionListAd
 import com.example.android.politicalpreparedness.election.adapter.ElectionListener
 import com.example.android.politicalpreparedness.repository.Repository
 
-class ElectionsFragment: Fragment() {
+class ElectionsFragment : Fragment() {
 
     private lateinit var electionsViewModel: ElectionsViewModel
     private lateinit var upcomingElectionsListAdapter: ElectionListAdapter
@@ -23,11 +24,12 @@ class ElectionsFragment: Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+                              savedInstanceState: Bundle?): View {
 
+        val application = requireNotNull(this.activity).application
         val database = ElectionDatabase.getInstance(requireContext())
         val repository = Repository(database)
-        val viewModelFactory = ElectionsViewModelFactory(repository)
+        val viewModelFactory = ElectionsViewModelFactory(repository, application)
         electionsViewModel = ViewModelProvider(this, viewModelFactory).get(ElectionsViewModel::class.java)
 
         val binding = FragmentElectionBinding.inflate(inflater, container, false)
@@ -46,19 +48,20 @@ class ElectionsFragment: Fragment() {
         binding.savedElectionsRecycler.adapter = savedElectionsListAdapter
 
         electionsViewModel.navigateToVoterInfo.observe(viewLifecycleOwner, { election ->
-            if(election != null) {
+            if (election != null) {
                 this.findNavController().navigate(ElectionsFragmentDirections.actionElectionsFragmentToVoterInfoFragment(election, election.division))
                 electionsViewModel.navigationToVoterInfoComplete()
             }
         })
 
         electionsViewModel.errorOnFetchingNetworkData.observe(viewLifecycleOwner, {
-            if(it) {
+            if (it) {
                 Toast.makeText(
                         activity,
                         R.string.network_error,
                         Toast.LENGTH_LONG
                 ).show()
+                binding.loadingUpcomingElectionsImage.visibility = View.GONE
                 electionsViewModel.displayNetworkErrorCompleted()
             }
         })
@@ -66,18 +69,26 @@ class ElectionsFragment: Fragment() {
         electionsViewModel.upcomingElections.observe(viewLifecycleOwner, { upcomingElections ->
             upcomingElections?.apply {
                 upcomingElectionsListAdapter.submitList(upcomingElections)
+                if (upcomingElections.isNotEmpty()) {
+                    binding.loadingUpcomingElectionsImage.visibility = View.GONE
+                    binding.connectionErrorImage.visibility = View.GONE
+                } else {
+                    binding.loadingUpcomingElectionsImage.visibility = View.VISIBLE
+                }
             }
         })
 
         electionsViewModel.savedElections.observe(viewLifecycleOwner, { savedElections ->
             savedElections?.apply {
                 savedElectionsListAdapter.submitList(savedElections)
+                if(savedElections.isNotEmpty()) {
+                    binding.noDataHint.visibility = View.GONE
+                } else {
+                    binding.noDataHint.visibility = View.VISIBLE
+                }
             }
         })
 
         return binding.root
     }
-
-    //TODO: Refresh adapters when fragment loads
-
 }

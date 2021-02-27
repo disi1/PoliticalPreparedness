@@ -4,5 +4,6 @@
     <dimen name="small_padding">4dp</dimen>
     <dimen name="extra_large_padding">24dp</dimen>
     <dimen name="large_padding">16dp</dimen>
+    <dimen name="loading_indicator_dimens">200dp</dimen>
 
 </resources>
