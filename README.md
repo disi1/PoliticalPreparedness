@@ -1,7 +1,8 @@
 ## Political Preparedness
 
-PoliticalPreparadness was developed as a capstone project for the Udacity's Android Kotlin Developer Nanodegree Program. This application provides civic data intended to provide educational opportunities to the U.S. electorate using data provided by the Google Civic Information API.
-PolitcalPreparedness is an example application built to demonstrate core Android Development skills as presented in the Udacity Android Developers Kotlin curriculum.
+Political Preparadness was developed as a capstone project for the Udacity's Android Kotlin Developer Nanodegree Program.
+This application provides civic data intended to provide educational opportunities to the U.S. electorate using data provided by the Google Civic Information API.
+Politcal Preparedness is an example application built to demonstrate core Android Development skills as presented in the Udacity Android Developers Kotlin curriculum.
 
 This app demonstrates the following views and techniques:
 
@@ -9,6 +10,7 @@ This app demonstrates the following views and techniques:
 * [Moshi](https://github.com/square/moshi) which handles the deserialization of the returned JSON to Kotlin data objects. 
 * [Glide](https://bumptech.github.io/glide/) to load and cache images by URL.
 * [Room](https://developer.android.com/training/data-storage/room) for local database storage.
+* Repository pattern - to hide the complexity of managing the interactions between the database and the networking code.
   
 It leverages the following components from the Jetpack library:
 
@@ -16,6 +18,7 @@ It leverages the following components from the Jetpack library:
 * [LiveData](https://developer.android.com/topic/libraries/architecture/livedata)
 * [Data Binding](https://developer.android.com/topic/libraries/data-binding/) with binding adapters
 * [Navigation](https://developer.android.com/topic/libraries/architecture/navigation/) with the SafeArgs plugin for parameter passing between fragments
+* [RecyclerView](https://developer.android.com/guide/topics/ui/layout/recyclerview)
 
 
 ## Setting up the Repository
@@ -27,3 +30,12 @@ To get started with this project, simply pull the repository and import the proj
 ```properties
 API_KEY=YOUR_API_KEY
 ```
+
+## Application main flow
+Take a look at some of the things you can do with this app:
+
+![](./assets/PoliticalPreparedness_UpcomingElections1.gif)
+
+![](./assets/PoliticalPreparedness_UpcomingElections2.gif)
+
+![](./assets/PoliticalPreparedness_Representatives.gif)
